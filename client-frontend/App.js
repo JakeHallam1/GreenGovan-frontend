@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 
 // screens
 import LoginScreen from "./src/screens/login/LoginScreen";
+import HomeScreen from "./src/screens/authorised/HomeScreen";
 
 export default function App() {
   const [cookies, setCookie, removeCookie] = useCookies(
@@ -13,7 +14,7 @@ export default function App() {
     "refreshToken"
   );
 
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(true);
   return (
     <NavigationContainer
       style={styles.container}
@@ -25,9 +26,7 @@ export default function App() {
       {/* public login screen */}
       {!cookies.refreshToken && <LoginScreen setLoggedIn={setLoggedIn} />}
 
-      {cookies.refreshToken && (
-        <Text>You are logged in with token {cookies.accessToken}</Text>
-      )}
+      {cookies.refreshToken && <HomeScreen />}
     </NavigationContainer>
   );
 }
