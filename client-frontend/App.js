@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { handleLogout } from "./src/customModules/auth";
 // screens
 import LoginScreen from "./src/screens/login/LoginScreen";
+import HomeScreen from "./src/screens/authorised/HomeScreen";
 
 export default function App() {
   const [cookies, setCookie, removeCookie] = useCookies([
@@ -28,15 +29,8 @@ export default function App() {
       {/* public login screen */}
       {!cookies.refreshToken && <LoginScreen setLoggedIn={setLoggedIn} />}
 
-      {cookies.refreshToken && (
-        <Button
-          title="logout"
-          onPress={() => {
-            handleLogout(cookies, removeCookie);
-            setLoggedIn(false);
-          }}
-        />
-      )}
+
+      {cookies.refreshToken && <HomeScreen />}
     </NavigationContainer>
   );
 }
