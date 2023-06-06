@@ -24,7 +24,7 @@ const styles = (props) =>
       minWidth: 300,
       alignItems: "center",
       justifyContent: "center",
-      borderRadius: 10,
+      borderRadius: 20,
       shadowRadius: 45,
       shadowOpacity: 0.1,
       paddingVertical: 20,
