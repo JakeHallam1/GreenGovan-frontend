@@ -1,10 +1,13 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View } from "react-native";
+import { GenericButton } from "./src/components/Generic/GenericButton";
+
+const colourScheme = require("./brandpack/colourScheme.json");
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+      <Text style={styles.text}>Green Govan</Text>
       <StatusBar style="auto" />
     </View>
   );
@@ -13,8 +16,13 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#2bbf71",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  text: {
+    fontSize: 80,
+    fontWeight: "900",
+    color: "#ffffff",
   },
 });
