@@ -1,0 +1,9 @@
+{
+  "backend": {
+    "baseURL": "https://localhost",
+    "ports": {
+      "main": "5050",
+      "auth": "5051"
+    }
+  }
+}

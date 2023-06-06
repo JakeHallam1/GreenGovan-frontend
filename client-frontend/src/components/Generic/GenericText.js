@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 
-const colourScheme = require("../../../brandpack/colourScheme.json");
+const colourScheme = require("../../../../brandpack/colourScheme.json");
 
 export default function GenericText(props) {
   return (
