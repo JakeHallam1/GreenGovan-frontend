@@ -1,20 +1,23 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Button } from "react-native";
 import { useCookies } from "react-cookie";
 import { NavigationContainer } from "@react-navigation/native";
 import { useState, useEffect } from "react";
 
+// custom modules
+import { handleLogout } from "./src/customModules/auth";
 // screens
 import LoginScreen from "./src/screens/login/LoginScreen";
 import HomeScreen from "./src/screens/authorised/HomeScreen";
 
 export default function App() {
-  const [cookies, setCookie, removeCookie] = useCookies(
+  const [cookies, setCookie, removeCookie] = useCookies([
     "accessToken",
-    "refreshToken"
-  );
+    "refreshToken",
+  ]);
 
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(cookies.refreshToken ? true : false);
+
   return (
     <NavigationContainer
       style={styles.container}
@@ -25,6 +28,7 @@ export default function App() {
     >
       {/* public login screen */}
       {!cookies.refreshToken && <LoginScreen setLoggedIn={setLoggedIn} />}
+
 
       {cookies.refreshToken && <HomeScreen />}
     </NavigationContainer>

@@ -44,13 +44,13 @@ export default function LoginScreen(props) {
   const handleLogin = async () => {
     // send login request with userID and password
     fetch(
-      `${ENDPOINTS.backend.baseURL}:${ENDPOINTS.backend.ports.auth}/login`,
+      `${ENDPOINTS.backend.baseURL}:${ENDPOINTS.backend.ports.auth}/login/client`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userID: username, password: password }),
+        body: JSON.stringify({ username: username, password: password }),
       }
     )
       .then(async (response) => {
@@ -92,7 +92,7 @@ export default function LoginScreen(props) {
             weight="400"
             colour={colourScheme.primary}
           >
-            Login
+            Client Login
           </GenericText>,
         ]}
         body={
@@ -104,7 +104,7 @@ export default function LoginScreen(props) {
               autoComplete={false}
               autoCorrect={false}
               style={{ outline: "none" }}
-              placeholder="Username"
+              placeholder="Organisation name"
               onChangeText={(value) => setUsername(value)}
               // hit enter to move onto password field
               onSubmitEditing={() => passwordInput.current.focus()}
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    width: "65%",
+    width: "75%",
     height: 50,
     padding: 10,
     resizeMode: "contain",

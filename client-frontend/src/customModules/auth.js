@@ -46,7 +46,6 @@ export async function handleLogout(cookies, removeCookie) {
     .then(() => {
       removeCookie("accessToken");
       removeCookie("refreshToken");
-      removeCookie("user");
     })
     .catch((error) => console.log(error));
 }
