@@ -29,7 +29,6 @@ export default function App() {
       {/* public login screen */}
       {!cookies.refreshToken && <LoginScreen setLoggedIn={setLoggedIn} />}
 
-
       {cookies.refreshToken && <HomeScreen />}
     </NavigationContainer>
   );

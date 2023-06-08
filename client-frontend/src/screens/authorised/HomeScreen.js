@@ -3,7 +3,7 @@ import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native";
 import React from "react";
-import { GenericButton } from "../../components/Generic/GenericButton";
+import GenericButton from "../../components/Generic/GenericButton";
 
 const colourScheme = require("../../../../brandpack/colourScheme.json");
 
@@ -16,6 +16,17 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
+      <View style={styles.topContainer}>
+        <View style={styles.button}>
+          <GenericButton
+            text="Logout"
+            rounded={true}
+            colour={colourScheme.primary}
+            hollow={true}
+            fontWeight={600}
+          />
+        </View>
+      </View>
       <View style={styles.inputContainer}>
         <TextInput
           ref={userIDRef}
@@ -36,12 +47,16 @@ export default function HomeScreen() {
             }
           }}
         />
-        <GenericButton
-          text="Submit"
-          rounded={true}
-          colour={colourScheme.primary}
-          fontWeight={600}
-        />
+      </View>
+      <View style={styles.buttonContainer}>
+        <View style={styles.button}>
+          <GenericButton
+            text="Add"
+            rounded={true}
+            colour={colourScheme.primary}
+            fontWeight={600}
+          />
+        </View>
       </View>
     </View>
   );
@@ -52,6 +67,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
+  },
+  topContainer: {
+    width: "100%",
+    alignItems: "flex-start",
+    padding: 10,
+    paddingLeft: 5,
   },
   textInput: {
     fontSize: 20,
@@ -76,5 +97,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: colourScheme.haze,
     padding: 10,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+  },
+  button: {
+    marginHorizontal: 10,
   },
 });
