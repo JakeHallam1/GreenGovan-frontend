@@ -1,22 +1,34 @@
-import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { TextInput } from "react-native";
 import React from "react";
+import { useCookies } from "react-cookie";
+
 import GenericButton from "../../components/Generic/GenericButton";
+import AddPointsModal from "../../components/Home/AddPointsModal";
+
+import { handleLogout } from "../../customModules/auth";
 
 const colourScheme = require("../../../../brandpack/colourScheme.json");
 
 export default function HomeScreen() {
-  const userIDRef = React.createRef();
-  const numValRef = React.createRef();
+  // cookies
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "accessToken",
+    "refreshToken",
+    "user",
+  ]);
 
-  const [userID, setUserID] = useState("");
-  const [numVal, setNumVal] = useState(0);
+  //states
+  const [AddPointsVisible, setAddPointsVisible] = useState(false);
 
   return (
     <View style={styles.container}>
+      <AddPointsModal
+        visible={AddPointsVisible}
+        setVisible={setAddPointsVisible}
+      />
       <View style={styles.topContainer}>
+        {/* Logout Button */}
         <View style={styles.button}>
           <GenericButton
             text="Logout"
@@ -24,38 +36,24 @@ export default function HomeScreen() {
             colour={colourScheme.primary}
             hollow={true}
             fontWeight={600}
+            width={100}
+            onPress={() => handleLogout(cookies, removeCookie)}
           />
         </View>
       </View>
-      <View style={styles.inputContainer}>
-        <TextInput
-          ref={userIDRef}
-          style={[styles.textInput, { outline: "none" }]}
-          placeholder={"User ID"}
-          placeholderTextColor={colourScheme.lightGrey}
-          value={userID}
-          onChangeText={(text) => setUserID(text)}
-          onSubmitEditing={() => numValRef.current.focus()}
-        />
-        <TextInput
-          ref={numValRef}
-          style={[styles.numInput, { outline: "none" }]}
-          value={numVal}
-          onChangeText={(text) => {
-            if (!isNaN(Number(text.replace("/[^0-9]/g", "")))) {
-              setNumVal(Number(text.replace("/[^0-9]/g", "")));
-            }
-          }}
-        />
-      </View>
-      <View style={styles.buttonContainer}>
-        <View style={styles.button}>
-          <GenericButton
-            text="Add"
-            rounded={true}
-            colour={colourScheme.primary}
-            fontWeight={600}
-          />
+      <View style={styles.dashboard}>
+        <View style={styles.buttonContainer}>
+          <View style={styles.button}>
+            <GenericButton
+              text="Add points"
+              rounded={true}
+              colour={colourScheme.primary}
+              fontWeight={600}
+              width={130}
+              padding={10}
+              onPress={() => setAddPointsVisible(true)}
+            />
+          </View>
         </View>
       </View>
     </View>
@@ -67,6 +65,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
+    overflow: "hidden",
   },
   topContainer: {
     width: "100%",
@@ -74,30 +73,7 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingLeft: 5,
   },
-  textInput: {
-    fontSize: 20,
-    fontWeight: "600",
-    color: colourScheme.text,
-    width: "200%",
-    borderRadius: 5,
-    backgroundColor: colourScheme.haze,
-    padding: 10,
-    marginBottom: 50,
-  },
-  inputContainer: {
-    alignItems: "center",
-    alignContent: "top",
-    marginTop: 50,
-  },
-  numInput: {
-    fontSize: 20,
-    fontWeight: "600",
-    color: colourScheme.text,
-    width: "100%",
-    borderRadius: 5,
-    backgroundColor: colourScheme.haze,
-    padding: 10,
-  },
+  dashboard: {},
   buttonContainer: {
     flexDirection: "row",
   },
