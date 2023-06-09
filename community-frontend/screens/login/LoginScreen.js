@@ -10,18 +10,18 @@ import GenericModal from "../../components/Generic/GenericModal";
 import GenericText from "../../components/Generic/GenericText";
 
 // endpoints
-const ENDPOINTS = require("../../../endpoints.json");
+const ENDPOINTS = require("../../../../endpoints.json");
 
 // colour scheme
 const colourScheme = require("../../../brandpack/colourScheme.json");
 
 export default function LoginScreen(props) {
   // input field refs
-  const userIDInput = React.createRef();
+  const usernameInput = React.createRef();
   const passwordInput = React.createRef();
 
   // component state hooks
-  const [userID, setUserID] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState();
   const [errorMessage, setErrorMessage] = useState();
@@ -44,13 +44,13 @@ export default function LoginScreen(props) {
   const handleLogin = async () => {
     // send login request with userID and password
     fetch(
-      `${ENDPOINTS.backend.baseURL}:${ENDPOINTS.backend.ports.auth}/login`,
+      `${ENDPOINTS.backend.baseURL}:${ENDPOINTS.backend.ports.auth}/login/client`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userID: userID, password: password }),
+        body: JSON.stringify({ username: username, password: password }),
       }
     )
       .then(async (response) => {
@@ -83,7 +83,7 @@ export default function LoginScreen(props) {
         header={[
           <Image
             key={1}
-            source={require("../../../assets/logo-no-background.png")}
+            source={require("../../../assets/logo_transparent.png")}
             style={styles.logo}
           />,
           <GenericText
@@ -92,7 +92,7 @@ export default function LoginScreen(props) {
             weight="400"
             colour={colourScheme.primary}
           >
-            Login
+            Client Login
           </GenericText>,
         ]}
         body={
@@ -100,12 +100,12 @@ export default function LoginScreen(props) {
             {/* user ID input field */}
             <Input
               key={1}
-              ref={userIDInput}
+              ref={usernameInput}
               autoComplete={false}
               autoCorrect={false}
               style={{ outline: "none" }}
-              placeholder="User ID"
-              onChangeText={(value) => setUserID(value)}
+              placeholder="Organisation name"
+              onChangeText={(value) => setUsername(value)}
               // hit enter to move onto password field
               onSubmitEditing={() => passwordInput.current.focus()}
             ></Input>
@@ -119,7 +119,7 @@ export default function LoginScreen(props) {
               placeholder="Password"
               onChangeText={(value) => setPassword(value)}
               secureTextEntry={true}
-              disabled={userID.length == 0}
+              disabled={username.length == 0}
               // hit enter to login
               onSubmitEditing={() => setLoggingIn(true)}
               errorMessage={errorMessage}
@@ -136,7 +136,7 @@ export default function LoginScreen(props) {
               rounded={true}
               weight="bold"
               colour={colourScheme.primary}
-              disabled={!(userID.length > 0 && password.length > 0)}
+              disabled={!(username.length > 0 && password.length > 0)}
               loading={loggingIn}
             />
           </View>,
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    width: "50%",
+    width: "75%",
     height: 50,
     padding: 10,
     resizeMode: "contain",
