@@ -86,6 +86,7 @@ export default function AddPointsModal(props) {
                   colour={colourScheme.primary}
                   fontWeight={600}
                   width={100}
+                  onPress={() => console.log("Working")}
                 />
               </View>
             </View>

@@ -12,7 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { invertColor, colourLuminance } from "../../customModules/colour";
 
-const colourScheme = require("../../../brandpack/colourScheme.json");
+const colourScheme = require("../../../../brandpack/colourScheme.json");
 
 export default function GenericButton(props) {
   const textColour = props.textColour
