@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import { StyleSheet, Text, View, ScrollView, Image } from "react-native";
 import React from "react";
 import QRCode from "react-native-qrcode-svg";
 import { useCookies } from "react-cookie";
@@ -14,7 +14,7 @@ import { useState, useEffect } from "react";
 
 // custom components
 import ContentSection from "../../src/components/Home/ContentSection";
-import PartnersSection from "../../src/components/Home/partnersSection";
+import ContentTile from "../../src/components/Home/ContentTile";
 
 const ENDPOINTS = require("../../../endpoints.json");
 const colourScheme = require("../../../brandpack/colourScheme.json");
@@ -61,7 +61,7 @@ export default function HomeScreen() {
         style={[styles.scanContainer]}
         header={
           <Text style={[styles.contentSectionTitle, { color: "white" }]}>
-            Scan to collect points
+            Scan to collect GoPoints
           </Text>
         }
         body={
@@ -81,9 +81,9 @@ export default function HomeScreen() {
       <ContentSection
         style={[styles.pointsContainer]}
         body={
-          <View>
+          <View style={{ alignItems: "center" }}>
             <Text style={styles.points}>{(user && user.points) || 0}</Text>
-            <Text style={styles.pointsTitle}>Go Points</Text>
+            <Text style={styles.pointsTitle}>GoPoints</Text>
           </View>
         }
       />
@@ -91,13 +91,100 @@ export default function HomeScreen() {
       <ContentSection
         style={[styles.redeemContainer]}
         header={
-          <Text style={[styles.contentSectionTitle, { textAlign: "left" }]}>
-            Redeem
-          </Text>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text style={[styles.contentSectionTitle, { textAlign: "left" }]}>
+              Redeem
+            </Text>
+            <Image
+              style={styles.greenLogo}
+              resizeMode="contain"
+              source={require("../../../brandpack/green-transparent.png")}
+            />
+          </View>
         }
         body={
-          <ScrollView horizontal={true}>
-            <PartnersSection />
+          <ScrollView
+            horizontal={true}
+            style={styles.horizontalScroll}
+            showsHorizontalScrollIndicator={false}
+          >
+            <ContentTile
+              image={require("../../assets/bus-roller-small.jpeg")}
+              title="Get bus tickets"
+            />
+            <ContentTile
+              image={require("../../assets/cheeky-nandos.jpeg")}
+              title="Get a cheeky Nandos®"
+            />
+          </ScrollView>
+        }
+      />
+
+      <ContentSection
+        style={[styles.redeemContainer]}
+        header={
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text style={[styles.contentSectionTitle, { textAlign: "left" }]}>
+              Shop
+            </Text>
+            <Image
+              style={styles.greenLogo}
+              resizeMode="contain"
+              source={require("../../../brandpack/green-transparent.png")}
+            />
+          </View>
+        }
+        body={
+          <ScrollView
+            horizontal={true}
+            style={styles.horizontalScroll}
+            showsHorizontalScrollIndicator={false}
+          >
+            <ContentTile
+              image={require("../../assets/co-op.jpg")}
+              title="Earn GoPoints at Co-op"
+            />
+            <ContentTile
+              image={require("../../assets/asda.jpeg")}
+              title="Earn GoPoints at ASDA"
+            />
+
+            <ContentTile
+              image={require("../../assets/eating-healthy.jpeg")}
+              title="Eating healthy"
+            />
+          </ScrollView>
+        }
+      />
+
+      <ContentSection
+        style={[styles.redeemContainer]}
+        header={
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text style={[styles.contentSectionTitle, { textAlign: "left" }]}>
+              Recycle
+            </Text>
+            <Image
+              style={styles.greenLogo}
+              resizeMode="contain"
+              source={require("../../../brandpack/green-transparent.png")}
+            />
+          </View>
+        }
+        body={
+          <ScrollView
+            horizontal={true}
+            style={styles.horizontalScroll}
+            showsHorizontalScrollIndicator={false}
+          >
+            <ContentTile
+              image={require("../../assets/recycling-center.jpg")}
+              title="Earn GoPoints recycling"
+            />
+            <ContentTile
+              image={require("../../assets/plastic-bottles.jpeg")}
+              title="Learn about recycling"
+            />
           </ScrollView>
         }
       />
@@ -117,7 +204,7 @@ const styles = StyleSheet.create({
 
   contentSectionTitle: {
     fontSize: 26,
-    fontWeight: "600",
+    fontWeight: "700",
     textAlign: "center",
     padding: 5,
   },
@@ -155,4 +242,12 @@ const styles = StyleSheet.create({
     color: colourScheme.primary,
   },
   redeemContainer: {},
+  horizontalScroll: {
+    padding: 10,
+  },
+  greenLogo: {
+    width: 80,
+    height: 35,
+    marginBottom: 5,
+  },
 });

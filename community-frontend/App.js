@@ -5,20 +5,12 @@ import { useCookies } from "react-cookie";
 import { useState, useEffect } from "react";
 
 // navigation
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import { NavigationContainer } from "@react-navigation/native";
 
 // screens
 import HomeScreen from "./screens/authorised/HomeScreen";
 
-// custom components
-import GenericText from "./src/components/Generic/GenericText";
-import { GenericButton } from "./src/components/Generic/GenericButton";
-import Menu from "./src/components/Generic/Menu";
-import GenericHeader from "./src/components/Generic/GenericHeader";
-
 // custom modules
-import { getIconName } from "./src/customModules/icons";
 import LoginScreen from "./screens/login/LoginScreen";
 
 const colourScheme = require("../brandpack/colourScheme.json");
@@ -28,10 +20,6 @@ export default function App() {
     "accessToken",
     "refreshToken",
   ]);
-
-  const [loggedIn, setLoggedIn] = useState(cookies.refreshToken ? true : false);
-
-  const Drawer = createDrawerNavigator();
 
   return (
     <NavigationContainer>
