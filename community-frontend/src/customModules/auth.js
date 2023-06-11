@@ -61,41 +61,31 @@ export async function handleProtectedRequest(
   // adds authorisation
   config.headers.Authorization = `Bearer ${cookies.accessToken || null}`;
   // send initial request (requiring auth)
-  return fetch(url, config)
-    .then(async (response) => {
-      // if unauthorised
-      if (response.status == 403) {
-        // generate a fresh access token using the refresh token
-        return generateNewAccessToken(cookies, setCookie).then(
-          (accessToken) => {
-            // update request authorisation using new access token
-            config.headers.Authorization = `Bearer ${accessToken}`;
-            console.log("Sending request again");
-            // send request again
-            return (
-              fetch(url, config)
-                .then((response) => {
-                  // if second request still unauthorised then logs user out
-                  if (response.status == 403) {
-                    handleLogout(cookies, removeCookie);
-                  }
-                  return response.json().catch((error) => {
-                    return null;
-                  });
-                })
-                // returns data
-                .then((data) => {
-                  return data;
-                })
-            );
-          }
+  return fetch(url, config).then(async (response) => {
+    // if unauthorised
+    if (response.status == 403) {
+      // generate a fresh access token using the refresh token
+      return generateNewAccessToken(cookies, setCookie).then((accessToken) => {
+        // update request authorisation using new access token
+        config.headers.Authorization = `Bearer ${accessToken}`;
+        console.log("Sending request again");
+        // send request again
+        return (
+          fetch(url, config)
+            .then((response) => {
+              // if second request still unauthorised then logs user out
+              if (response.status === 403) {
+                handleLogout(cookies, removeCookie);
+              }
+              return response;
+            })
+            // returns data
+            .then((data) => {
+              return data;
+            })
         );
-      }
-      return response.json().catch((error) => {
-        return null;
       });
-    })
-    .catch((error) => {
-      throw error;
-    });
+    }
+    return response;
+  });
 }
