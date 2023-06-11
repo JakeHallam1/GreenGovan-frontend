@@ -5,12 +5,12 @@ import { Input } from "react-native-elements";
 import { useCookies } from "react-cookie";
 
 // custom components
-import GenericButton from "../../components/Generic/GenericButton";
-import GenericModal from "../../components/Generic/GenericModal";
-import GenericText from "../../components/Generic/GenericText";
+import GenericButton from "../../src/components/Generic/GenericButton";
+import GenericModal from "../../src/components/Generic/GenericModal";
+import GenericText from "../../src/components/Generic/GenericText";
 
 // endpoints
-const ENDPOINTS = require("../../../../endpoints.json");
+const ENDPOINTS = require("../../../endpoints.json");
 
 // colour scheme
 const colourScheme = require("../../../brandpack/colourScheme.json");
@@ -44,7 +44,7 @@ export default function LoginScreen(props) {
   const handleLogin = async () => {
     // send login request with userID and password
     fetch(
-      `${ENDPOINTS.backend.baseURL}:${ENDPOINTS.backend.ports.auth}/login/client`,
+      `${ENDPOINTS.backend.baseURL}:${ENDPOINTS.backend.ports.auth}/login/community`,
       {
         method: "POST",
         headers: {
@@ -63,7 +63,6 @@ export default function LoginScreen(props) {
           setCookie("refreshToken", data.refreshToken);
 
           setErrorMessage(null);
-          props.setLoggedIn(true);
         } else {
           // bells and whistles
           passwordInput.current.shake();
@@ -83,7 +82,7 @@ export default function LoginScreen(props) {
         header={[
           <Image
             key={1}
-            source={require("../../../assets/logo_transparent.png")}
+            source={require("../../../brandpack/logo_transparent.png")}
             style={styles.logo}
           />,
           <GenericText
@@ -92,7 +91,7 @@ export default function LoginScreen(props) {
             weight="400"
             colour={colourScheme.primary}
           >
-            Client Login
+            Login
           </GenericText>,
         ]}
         body={
@@ -104,7 +103,7 @@ export default function LoginScreen(props) {
               autoComplete={false}
               autoCorrect={false}
               style={{ outline: "none" }}
-              placeholder="Organisation name"
+              placeholder="Username"
               onChangeText={(value) => setUsername(value)}
               // hit enter to move onto password field
               onSubmitEditing={() => passwordInput.current.focus()}
