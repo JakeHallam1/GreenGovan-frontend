@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Button, Pressable } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Button,
+  Pressable,
+  SafeAreaView,
+} from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
+
+// screens
+import LoginScreen from "./src/screens/login/LoginScreen";
+import ScanScreen from "./src/screens/authorised/ScanScreen";
 
 //const colourScheme = require("../../GreenGovan-frontend/brandpack/colourScheme.json");
 
@@ -8,7 +19,9 @@ export default function App() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [scannedData, setScannedData] = useState("");
+  const [accessToken, setAccessToken] = useState();
 
+  // request camera permissions
   useEffect(() => {
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -21,34 +34,23 @@ export default function App() {
     setScannedData(data);
   };
 
-  const handleScanAgain = () => {
+  const resetScanner = () => {
     setScanned(false);
     setScannedData("");
   };
 
-  if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>;
-  }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
+  if (hasPermission == false) {
+    alert("Camera permission denied");
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.scannerContainer}>
-        <BarCodeScanner
-          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-          style={StyleSheet.absoluteFillObject}
-        />
-      </View>
-
-      {scanned && (
-        <Pressable style={styles.button} onPress={() => setScanned(false)}>
-          <Text style={styles.text}>Scan again</Text>
-        </Pressable>
+    <SafeAreaView style={styles.container}>
+      {accessToken ? (
+        <ScanScreen accessToken={accessToken} />
+      ) : (
+        <LoginScreen setAccessToken={setAccessToken} />
       )}
-      <Text style={styles.textOutput}>User ID: {scannedData}</Text>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -59,11 +61,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  scannerContainer: {
-    height: 600,
-    width: 600,
-    marginBottom: 20,
-  },
+
   scanner: {
     flex: 1,
   },

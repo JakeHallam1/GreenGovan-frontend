@@ -1,31 +1,61 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { useCookies } from "react-cookie";
+import QRCode from "react-native-qrcode-svg";
+import { Skeleton } from "@rneui/themed";
 
+// custom components
 import GenericButton from "../../components/Generic/GenericButton";
 import AddPointsModal from "../../components/Home/AddPointsModal";
+import ConnectScannerModal from "../../components/Home/ConnectScannerModal";
 
-import { handleLogout } from "../../customModules/auth";
+// custom modules
+import { handleLogout, handleProtectedRequest } from "../../customModules/auth";
 
 const colourScheme = require("../../../../brandpack/colourScheme.json");
+
+const ENDPOINTS = require("../../../../endpoints.json");
 
 export default function HomeScreen() {
   // cookies
   const [cookies, setCookie, removeCookie] = useCookies([
     "accessToken",
     "refreshToken",
-    "user",
   ]);
 
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    handleProtectedRequest(
+      `${ENDPOINTS.backend.baseURL}:${ENDPOINTS.backend.ports.main}/api/users/me`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+      cookies,
+      setCookie,
+      removeCookie
+    ).then((user) => {
+      setUser(user);
+    });
+  }, []);
+
   //states
-  const [AddPointsVisible, setAddPointsVisible] = useState(false);
+  const [addPointsVisible, setAddPointsVisible] = useState(false);
+  const [connectScannerVisible, setConnectScannerVisible] = useState(false);
 
   return (
     <View style={styles.container}>
       <AddPointsModal
-        visible={AddPointsVisible}
+        visible={addPointsVisible}
         setVisible={setAddPointsVisible}
+      />
+      <ConnectScannerModal
+        visible={connectScannerVisible}
+        setVisible={setConnectScannerVisible}
       />
       <View style={styles.topContainer}>
         {/* Logout Button */}
@@ -52,6 +82,15 @@ export default function HomeScreen() {
               width={130}
               padding={10}
               onPress={() => setAddPointsVisible(true)}
+            />
+            <GenericButton
+              text="Connect scanner"
+              rounded={true}
+              colour={colourScheme.primary}
+              fontWeight={600}
+              width={130}
+              padding={10}
+              onPress={() => setConnectScannerVisible(true)}
             />
           </View>
         </View>
