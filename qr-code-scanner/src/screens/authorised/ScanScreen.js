@@ -3,6 +3,8 @@ import React from "react";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { useState, useEffect } from "react";
 import useWebSocket, { ReadyState } from "react-native-use-websocket";
+import { FontAwesome } from "@expo/vector-icons";
+
 const ENDPOINTS = require("../../../endpoints.json");
 const colourScheme = require("../../../colourScheme.json");
 
@@ -12,33 +14,7 @@ export default function ScanScreen(props) {
   const [scannedData, setScannedData] = useState("");
   const [user, setUser] = useState();
   const [customerID, setCustomerID] = useState("");
-
-  const [message, setMessage] = useState("");
-  //
-
-  const [socketUrl] = useState("wss://kylo.uk:8080");
-
-  const [messageHistory, setMessageHistory] = useState([]);
-
-  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
-
-  useEffect(() => {
-    setMessageHistory([...messageHistory, lastMessage]);
-  }, [lastMessage]);
-
-  const sendM = () => sendMessage("Hello");
-
-  const handleClickSendMessage = React.useCallback(sendM, [sendM]);
-
-  const connectionStatus = {
-    [ReadyState.CONNECTING]: "Connecting",
-    [ReadyState.OPEN]: "Open",
-    [ReadyState.CLOSING]: "Closing",
-    [ReadyState.CLOSED]: "Closed",
-    [ReadyState.UNINSTANTIATED]: "Uninstantiated",
-  }[readyState];
-
-  //
+  const [tickVisible, setTickVisible] = useState(false);
 
   // request camera permissions
   useEffect(() => {
@@ -52,6 +28,10 @@ export default function ScanScreen(props) {
   useEffect(() => {
     if (scannedData != customerID) {
       setCustomerID(scannedData);
+      setTickVisible(true);
+      setTimeout(() => {
+        setTickVisible(false);
+      }, 1000);
     }
   }, [scannedData]);
 
@@ -60,8 +40,10 @@ export default function ScanScreen(props) {
   }, [customerID]);
 
   const handleBarCodeScanned = ({ type, data }) => {
-    setScanned(true);
-    setScannedData(data);
+    if (data != scannedData) {
+      setScanned(true);
+      setScannedData(data);
+    }
   };
 
   const resetScanner = () => {
@@ -122,27 +104,35 @@ export default function ScanScreen(props) {
           style={[
             styles.scannerContainer,
             {
-              borderColor: scanned
+              borderColor: tickVisible
                 ? colourScheme.primary
                 : colourScheme.darkGrey,
             },
           ]}
         >
-          {/* <Button
-            onPress={handleClickSendMessage}
-            disabled={readyState !== ReadyState.OPEN}
-            title={"Click Me to send 'Hello'"}
-          />
-          <Text>The WebSocket is currently {connectionStatus}</Text>
-          {lastMessage ? <Text>Last message: {lastMessage.data}</Text> : null} */}
-
-          {/* <BarCodeScanner
-            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+          <BarCodeScanner
+            onBarCodeScanned={handleBarCodeScanned}
             style={StyleSheet.absoluteFillObject}
-          /> */}
+          />
+          {tickVisible && (
+            <View
+              style={{
+                width: 75,
+                height: 75,
+                backgroundColor: colourScheme.primary,
+                borderRadius: 100,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <FontAwesome name="check" size={40} color="white" />
+            </View>
+          )}
         </View>
       </View>
-      <View style={styles.footerContainer}></View>
+      <View style={styles.footerContainer}>
+        <Text>{customerID}</Text>
+      </View>
     </View>
   );
 }
@@ -167,6 +157,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     overflow: "hidden",
     borderWidth: 5,
+    alignItems: "center",
+    justifyContent: "center",
   },
   scannerTitle: {
     fontSize: 20,

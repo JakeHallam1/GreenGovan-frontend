@@ -5,8 +5,6 @@ import { TextInput } from "react-native";
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 
-import { handleProtectedRequest } from "../../../../community-frontend/src/customModules/auth";
-
 import GenericModal from "../Generic/GenericModal";
 import GenericText from "../Generic/GenericText";
 import GenericButton from "../Generic/GenericButton";
@@ -14,7 +12,6 @@ import { handleProtectedRequest } from "../../customModules/auth";
 
 const ENDPOINTS = require("../../../../endpoints.json");
 const colourScheme = require("../../../../brandpack/colourScheme.json");
-const ENDPOINTS = require("../../../../endpoints.json");
 
 export default function AddPointsModal(props) {
   // cookies
@@ -73,8 +70,7 @@ export default function AddPointsModal(props) {
       setCookie,
       removeCookie
     )
-      .then(async (res) => await res.json())
-      .then((data) => console.log(data))
+      .then((res) => setUserID(res.data))
       .catch((error) => console.log(error));
   }
 
