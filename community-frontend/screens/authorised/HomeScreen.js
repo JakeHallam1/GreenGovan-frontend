@@ -1,199 +1,213 @@
-import { StyleSheet, Text, View, ScrollView, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+  Modal,
+} from "react-native";
 import React from "react";
 import QRCode from "react-native-qrcode-svg";
 import { useCookies } from "react-cookie";
 import { Skeleton } from "@rneui/themed";
+import { useNavigation } from "@react-navigation/native";
 
 // custom modules
 import {
   handleProtectedRequest,
   handleLogout,
 } from "../../src/customModules/auth";
-import { Button } from "@rneui/base";
 import { useState, useEffect } from "react";
 
 // custom components
 import ContentSection from "../../src/components/Home/ContentSection";
 import ContentTile from "../../src/components/Home/ContentTile";
 
-const ENDPOINTS = require("../../../endpoints.json");
 const colourScheme = require("../../../brandpack/colourScheme.json");
 
-export default function HomeScreen() {
+export default function HomeScreen(props) {
   // cookies!! :)
   const [cookies, setCookie, removeCookie] = useCookies([
     "accessToken",
     "refreshToken",
   ]);
 
-  const [user, setUser] = useState(null);
-  const [userLoading, setUserLoading] = useState(true);
+  // loads user intially
+  useEffect(() => props.loadUser(), []);
 
-  useEffect(() => {
-    if (userLoading) {
-      loadUser();
-    }
-  }, [userLoading]);
+  const navigation = useNavigation();
 
-  async function loadUser() {
-    handleProtectedRequest(
-      `${ENDPOINTS.backend.baseURL}:${ENDPOINTS.backend.ports.main}/api/users/me`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-      cookies,
-      setCookie,
-      removeCookie
-    )
-      .then((response) => {
-        return response.json();
-      })
-      .then((user) => setUser(user))
-      .finally(() => setUserLoading(false))
-      .catch((error) => console.warn(error)); //show error on screen
-  }
   return (
-    <ScrollView style={styles.container}>
-      <ContentSection
-        style={[styles.scanContainer]}
-        header={
-          <Text style={[styles.contentSectionTitle, { color: "white" }]}>
-            Scan to collect GoPoints
-          </Text>
-        }
-        body={
-          <View style={styles.qrCodeContainer}>
-            <View style={styles.qrCode}>
-              {user ? (
-                <QRCode value={user && user.userID} size={200} />
-              ) : (
-                <Skeleton width={200} height={200} />
-              )}
+    <View style={{ width: "100%" }}>
+      <ScrollView style={styles.container}>
+        {/* qr code section */}
+        <ContentSection
+          style={[styles.scanContainer]}
+          header={
+            <Text style={[styles.contentSectionTitle, { color: "white" }]}>
+              Scan to collect GoPoints
+            </Text>
+          }
+          body={
+            <View style={styles.qrCodeContainer}>
+              <View style={styles.qrCode}>
+                {props.user ? (
+                  <QRCode value={props.user && props.user.userID} size={200} />
+                ) : (
+                  <Skeleton width={200} height={200} />
+                )}
+              </View>
+
+              <Text style={styles.qrCodeLabel}>
+                {props.user && props.user.userID}
+              </Text>
             </View>
+          }
+        />
 
-            <Text style={styles.qrCodeLabel}>{user && user.userID}</Text>
-          </View>
-        }
-      />
-      <ContentSection
-        style={[styles.pointsContainer]}
-        body={
-          <View style={{ alignItems: "center" }}>
-            <Text style={styles.points}>{(user && user.points) || 0}</Text>
-            <Text style={styles.pointsTitle}>GoPoints</Text>
-          </View>
-        }
-      />
+        {/* user profile section */}
+        <ContentSection
+          style={[styles.pointsContainer]}
+          body={
+            <View
+              style={{
+                flexDirection: "row",
 
-      <ContentSection
-        style={[styles.redeemContainer]}
-        header={
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={[styles.contentSectionTitle, { textAlign: "left" }]}>
-              Redeem
-            </Text>
-            <Image
-              style={styles.greenLogo}
-              resizeMode="contain"
-              source={require("../../../brandpack/green-transparent.png")}
-            />
-          </View>
-        }
-        body={
-          <ScrollView
-            horizontal={true}
-            style={styles.horizontalScroll}
-            showsHorizontalScrollIndicator={false}
-          >
-            <ContentTile
-              image={require("../../assets/bus-roller-small.jpeg")}
-              title="Get bus tickets"
-            />
-            <ContentTile
-              image={require("../../assets/cheeky-nandos.jpeg")}
-              title="Get a cheeky Nandos®"
-            />
-          </ScrollView>
-        }
-      />
+                justifyContent: "space-evenly",
+              }}
+            >
+              <View style={{ alignItems: "center", justifyContent: "center" }}>
+                <Text style={styles.username}>
+                  {props.user && props.user.username}
+                </Text>
+                <TouchableOpacity
+                  style={styles.logoutButton}
+                  onPress={() => handleLogout(cookies, removeCookie)}
+                >
+                  <Text
+                    style={{ fontSize: 16, fontWeight: 700, color: "white" }}
+                  >
+                    Logout
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={{ alignItems: "center" }}>
+                <Text style={styles.points}>
+                  {(props.user && props.user.points) || 0}
+                </Text>
+                <Text style={styles.pointsTitle}>GoPoints</Text>
+              </View>
+            </View>
+          }
+        />
 
-      <ContentSection
-        style={[styles.redeemContainer]}
-        header={
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={[styles.contentSectionTitle, { textAlign: "left" }]}>
-              Shop
-            </Text>
-            <Image
-              style={styles.greenLogo}
-              resizeMode="contain"
-              source={require("../../../brandpack/green-transparent.png")}
-            />
-          </View>
-        }
-        body={
-          <ScrollView
-            horizontal={true}
-            style={styles.horizontalScroll}
-            showsHorizontalScrollIndicator={false}
-          >
-            <ContentTile
-              image={require("../../assets/co-op.jpg")}
-              title="Earn GoPoints at Co-op"
-            />
-            <ContentTile
-              image={require("../../assets/asda.jpeg")}
-              title="Earn GoPoints at ASDA"
-            />
+        {/* redeem section */}
+        <ContentSection
+          style={[styles.contentSectionContainer]}
+          header={
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={[styles.contentSectionTitle, { textAlign: "left" }]}>
+                Redeem
+              </Text>
+              <Image
+                style={styles.greenLogo}
+                resizeMode="contain"
+                source={require("../../../brandpack/green-transparent.png")}
+              />
+            </View>
+          }
+          body={
+            <ScrollView
+              horizontal={true}
+              style={styles.horizontalScroll}
+              showsHorizontalScrollIndicator={false}
+            >
+              <ContentTile
+                image={require("../../assets/bus-roller-small.jpeg")}
+                title="Get bus tickets"
+                onPress={() => navigation.navigate("Redeem")}
+              />
+              <ContentTile
+                image={require("../../assets/eco-bus.jpeg")}
+                title="Learn about Eco-travel"
+              />
+            </ScrollView>
+          }
+        />
 
-            <ContentTile
-              image={require("../../assets/eating-healthy.jpeg")}
-              title="Eating healthy"
-            />
-          </ScrollView>
-        }
-      />
+        {/* shop section */}
+        <ContentSection
+          style={[styles.contentSectionContainer]}
+          header={
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={[styles.contentSectionTitle, { textAlign: "left" }]}>
+                Shop
+              </Text>
+              <Image
+                style={styles.greenLogo}
+                resizeMode="contain"
+                source={require("../../../brandpack/green-transparent.png")}
+              />
+            </View>
+          }
+          body={
+            <ScrollView
+              horizontal={true}
+              style={styles.horizontalScroll}
+              showsHorizontalScrollIndicator={false}
+            >
+              <ContentTile
+                image={require("../../assets/co-op.jpg")}
+                title="Earn GoPoints at Co-op"
+              />
+              <ContentTile
+                image={require("../../assets/asda.jpeg")}
+                title="Earn GoPoints at ASDA"
+              />
 
-      <ContentSection
-        style={[styles.redeemContainer]}
-        header={
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={[styles.contentSectionTitle, { textAlign: "left" }]}>
-              Recycle
-            </Text>
-            <Image
-              style={styles.greenLogo}
-              resizeMode="contain"
-              source={require("../../../brandpack/green-transparent.png")}
-            />
-          </View>
-        }
-        body={
-          <ScrollView
-            horizontal={true}
-            style={styles.horizontalScroll}
-            showsHorizontalScrollIndicator={false}
-          >
-            <ContentTile
-              image={require("../../assets/recycling-center.jpg")}
-              title="Earn GoPoints recycling"
-            />
-            <ContentTile
-              image={require("../../assets/plastic-bottles.jpeg")}
-              title="Learn about recycling"
-            />
-          </ScrollView>
-        }
-      />
+              <ContentTile
+                image={require("../../assets/eating-healthy.jpeg")}
+                title="Eating healthy"
+              />
+            </ScrollView>
+          }
+        />
 
-      <Button
-        title="Logout"
-        onPress={() => handleLogout(cookies, removeCookie)}
-      />
-    </ScrollView>
+        {/* recycling section */}
+        <ContentSection
+          style={[styles.contentSectionContainer]}
+          header={
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={[styles.contentSectionTitle, { textAlign: "left" }]}>
+                Recycle
+              </Text>
+              <Image
+                style={styles.greenLogo}
+                resizeMode="contain"
+                source={require("../../../brandpack/green-transparent.png")}
+              />
+            </View>
+          }
+          body={
+            <ScrollView
+              horizontal={true}
+              style={styles.horizontalScroll}
+              showsHorizontalScrollIndicator={false}
+            >
+              <ContentTile
+                image={require("../../assets/recycling-center.jpg")}
+                title="Earn GoPoints recycling"
+              />
+              <ContentTile
+                image={require("../../assets/plastic-bottles.jpeg")}
+                title="Learn about recycling"
+              />
+            </ScrollView>
+          }
+        />
+      </ScrollView>
+    </View>
   );
 }
 
@@ -241,7 +255,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: colourScheme.primary,
   },
-  redeemContainer: {},
+  contentSectionContainer: {},
   horizontalScroll: {
     padding: 10,
   },
@@ -249,5 +263,18 @@ const styles = StyleSheet.create({
     width: 80,
     height: 35,
     marginBottom: 5,
+  },
+  username: {
+    fontSize: 25,
+    fontWeight: "800",
+  },
+  logoutButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 15,
+    borderRadius: 30,
+    height: 20,
+    marginTop: 10,
+    backgroundColor: colourScheme.secondary,
   },
 });

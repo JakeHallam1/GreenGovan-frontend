@@ -1,8 +1,8 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, Button } from "react-native";
 import React from "react";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { useState, useEffect } from "react";
-
+import useWebSocket, { ReadyState } from "react-native-use-websocket";
 const ENDPOINTS = require("../../../endpoints.json");
 const colourScheme = require("../../../colourScheme.json");
 
@@ -11,6 +11,34 @@ export default function ScanScreen(props) {
   const [scanned, setScanned] = useState(false);
   const [scannedData, setScannedData] = useState("");
   const [user, setUser] = useState();
+  const [customerID, setCustomerID] = useState("");
+
+  const [message, setMessage] = useState("");
+  //
+
+  const [socketUrl] = useState("wss://kylo.uk:8080");
+
+  const [messageHistory, setMessageHistory] = useState([]);
+
+  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
+
+  useEffect(() => {
+    setMessageHistory([...messageHistory, lastMessage]);
+  }, [lastMessage]);
+
+  const sendM = () => sendMessage("Hello");
+
+  const handleClickSendMessage = React.useCallback(sendM, [sendM]);
+
+  const connectionStatus = {
+    [ReadyState.CONNECTING]: "Connecting",
+    [ReadyState.OPEN]: "Open",
+    [ReadyState.CLOSING]: "Closing",
+    [ReadyState.CLOSED]: "Closed",
+    [ReadyState.UNINSTANTIATED]: "Uninstantiated",
+  }[readyState];
+
+  //
 
   // request camera permissions
   useEffect(() => {
@@ -18,8 +46,18 @@ export default function ScanScreen(props) {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
       setHasPermission(status === "granted");
     })();
-    // loadUser();
+    loadUser();
   }, []);
+
+  useEffect(() => {
+    if (scannedData != customerID) {
+      setCustomerID(scannedData);
+    }
+  }, [scannedData]);
+
+  useEffect(() => {
+    pushScanner();
+  }, [customerID]);
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
@@ -42,7 +80,25 @@ export default function ScanScreen(props) {
         },
       }
     )
-      //   .then((res) => console.log(res))
+      .then(async (res) => setUser(await res.json()))
+      .catch((error) => console.log(error));
+  }
+
+  async function pushScanner() {
+    fetch(
+      `${ENDPOINTS.backend.baseURL}:${ENDPOINTS.backend.ports.main}/api/scanner/data`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${props.accessToken}`,
+        },
+        body: JSON.stringify({
+          data: customerID,
+        }),
+      }
+    )
+      .then(async (res) => setUser(await res.json()))
       .catch((error) => console.log(error));
   }
 
@@ -56,6 +112,9 @@ export default function ScanScreen(props) {
           style={styles.logo}
           source={require("../../../assets/logo_transparent.png")}
         />
+        <Text style={styles.organisationName}>
+          {user && user.organisationName}
+        </Text>
       </View>
       <View style={styles.bodyContainer}>
         <Text style={styles.scannerTitle}>Scan customer QR code</Text>
@@ -69,10 +128,18 @@ export default function ScanScreen(props) {
             },
           ]}
         >
-          <BarCodeScanner
+          {/* <Button
+            onPress={handleClickSendMessage}
+            disabled={readyState !== ReadyState.OPEN}
+            title={"Click Me to send 'Hello'"}
+          />
+          <Text>The WebSocket is currently {connectionStatus}</Text>
+          {lastMessage ? <Text>Last message: {lastMessage.data}</Text> : null} */}
+
+          {/* <BarCodeScanner
             onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
             style={StyleSheet.absoluteFillObject}
-          />
+          /> */}
         </View>
       </View>
       <View style={styles.footerContainer}></View>
@@ -107,7 +174,12 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   logo: {
-    width: 200,
+    width: "75%",
     height: 50,
+  },
+  organisationName: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: colourScheme.secondary,
   },
 });

@@ -1,9 +1,9 @@
 {
   "backend": {
-    "baseURL": "http://151.224.23.151",
+    "baseURL": "https://kylo.uk" , 
     "ports": {
-      "main": "5050",
-      "auth": "5051"
+      "main": "443",
+      "auth": "444"
     }
   }
 }

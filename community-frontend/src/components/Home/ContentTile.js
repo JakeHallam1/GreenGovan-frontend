@@ -1,11 +1,17 @@
-import { StyleSheet, Text, View, ImageBackground } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ImageBackground,
+  TouchableOpacity,
+} from "react-native";
 import React from "react";
 import { Svg, Defs, LinearGradient, Stop, Rect } from "react-native-svg";
 // import LinearGradient from "react-native-linear-gradient";
 
 export default function ContentTile(props) {
   return (
-    <View>
+    <TouchableOpacity onPress={props.onPress}>
       <ImageBackground
         style={styles.container}
         source={props.image}
@@ -32,7 +38,7 @@ export default function ContentTile(props) {
       </ImageBackground>
       {/* title */}
       <Text style={styles.title}>{props.title} →</Text>
-    </View>
+    </TouchableOpacity>
   );
 }
 

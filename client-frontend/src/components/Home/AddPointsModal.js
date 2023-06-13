@@ -3,14 +3,24 @@ import React from "react";
 import Modal from "react-native-modal";
 import { TextInput } from "react-native";
 import { useState, useEffect } from "react";
+import { useCookies } from "react-cookie";
+
+import { handleProtectedRequest } from "../../../../community-frontend/src/customModules/auth";
 
 import GenericModal from "../Generic/GenericModal";
 import GenericText from "../Generic/GenericText";
 import GenericButton from "../Generic/GenericButton";
 
 const colourScheme = require("../../../../brandpack/colourScheme.json");
+const ENDPOINTS = require("../../../../endpoints.json");
 
 export default function AddPointsModal(props) {
+  // cookies
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "accessToken",
+    "refreshToken",
+  ]);
+
   //references
   const userIDRef = React.createRef();
   const numValRef = React.createRef();
@@ -22,6 +32,24 @@ export default function AddPointsModal(props) {
   function resetInputs() {
     setUserID("");
     setNumVal(0);
+  }
+
+  function loadScannerData() {
+    handleProtectedRequest(
+      `${ENDPOINTS.backend.baseURL}:${ENDPOINTS.backend.ports.main}/api/scanner/data`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+      cookies,
+      setCookie,
+      removeCookie
+    )
+      .then(async (res) => await res.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.log(error));
   }
 
   return (
@@ -86,6 +114,17 @@ export default function AddPointsModal(props) {
                   colour={colourScheme.primary}
                   fontWeight={600}
                   width={100}
+                />
+              </View>
+              {/* "Load" button */}
+              <View style={styles.button}>
+                <GenericButton
+                  text="Load"
+                  rounded={true}
+                  colour={colourScheme.primary}
+                  fontWeight={600}
+                  width={100}
+                  onPress={loadScannerData}
                 />
               </View>
             </View>

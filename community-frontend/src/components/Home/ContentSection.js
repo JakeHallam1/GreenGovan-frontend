@@ -20,6 +20,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   header: {},
-  body: {},
+  body: { width: "100%" },
   footer: {},
 });
