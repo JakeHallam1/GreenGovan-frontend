@@ -10,7 +10,9 @@ import { handleProtectedRequest } from "../../../../community-frontend/src/custo
 import GenericModal from "../Generic/GenericModal";
 import GenericText from "../Generic/GenericText";
 import GenericButton from "../Generic/GenericButton";
+import { handleProtectedRequest } from "../../customModules/auth";
 
+const ENDPOINTS = require("../../../../endpoints.json");
 const colourScheme = require("../../../../brandpack/colourScheme.json");
 const ENDPOINTS = require("../../../../endpoints.json");
 
@@ -23,15 +25,39 @@ export default function AddPointsModal(props) {
 
   //references
   const userIDRef = React.createRef();
-  const numValRef = React.createRef();
+  const addedPointsRef = React.createRef();
 
   //states
   const [userID, setUserID] = useState("");
-  const [numVal, setNumVal] = useState(0);
+  const [addedPoints, setAddedPoints] = useState(0);
+
+  async function handleSubmit() {
+    handleProtectedRequest(
+      `${ENDPOINTS.backend.baseURL}:${ENDPOINTS.backend.ports.main}/api/points/earn`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userID: userID,
+          points: addedPoints,
+        }),
+      },
+      cookies,
+      setCookie,
+      removeCookie
+    )
+      .then(() => {
+        props.setVisible(false);
+        resetInputs();
+      })
+      .catch((error) => console.log(error));
+  }
 
   function resetInputs() {
     setUserID("");
-    setNumVal(0);
+    setAddedPoints(0);
   }
 
   function loadScannerData() {
@@ -75,6 +101,7 @@ export default function AddPointsModal(props) {
         maxWidth={800}
         header={
           <View style={styles.modalHeader}>
+            {/* Title */}
             <GenericText size={22} weight={600} colour={colourScheme.text}>
               Add points
             </GenericText>
@@ -91,20 +118,24 @@ export default function AddPointsModal(props) {
                 placeholderTextColor={colourScheme.lightGrey}
                 value={userID}
                 onChangeText={(text) => setUserID(text)}
-                onSubmitEditing={() => numValRef.current.focus()}
+                onSubmitEditing={() => addedPointsRef.current.focus()}
               />
               {/* Points added input */}
               <TextInput
-                ref={numValRef}
+                ref={addedPointsRef}
                 style={[styles.numInput, { outline: "none" }]}
-                value={numVal}
+                value={addedPoints}
                 onChangeText={(text) => {
                   if (!isNaN(Number(text.replace("/[^0-9]/g", "")))) {
-                    setNumVal(Number(text.replace("/[^0-9]/g", "")));
+                    setAddedPoints(Number(text.replace("/[^0-9]/g", "")));
                   }
                 }}
               />
             </View>
+          </View>
+        }
+        footer={
+          <View style={styles.modalFooter}>
             <View style={styles.buttonContainer}>
               {/* "Add" button */}
               <View style={styles.button}>
@@ -114,6 +145,8 @@ export default function AddPointsModal(props) {
                   colour={colourScheme.primary}
                   fontWeight={600}
                   width={100}
+                  disabled={!(userID.length > 0 && addedPoints > 0)}
+                  onPress={() => handleSubmit()}
                 />
               </View>
               {/* "Load" button */}
@@ -130,7 +163,6 @@ export default function AddPointsModal(props) {
             </View>
           </View>
         }
-        footer={<View style={styles.modalFooter}></View>}
       />
     </Modal>
   );
