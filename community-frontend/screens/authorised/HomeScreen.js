@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   Modal,
+  Linking,
 } from "react-native";
 import React from "react";
 import QRCode from "react-native-qrcode-svg";
@@ -131,6 +132,11 @@ export default function HomeScreen(props) {
               <ContentTile
                 image={require("../../assets/eco-bus.jpeg")}
                 title="Learn about Eco-travel"
+                onPress={() =>
+                  Linking.openURL(
+                    "https://www.transport.gov.scot/active-travel/developing-an-active-nation/sustainable-travel-and-the-national-transport-strategy/"
+                  )
+                }
               />
             </ScrollView>
           }
@@ -160,15 +166,47 @@ export default function HomeScreen(props) {
               <ContentTile
                 image={require("../../assets/co-op.jpg")}
                 title="Earn GoPoints at Co-op"
+                onPress={() =>
+                  Linking.openURL(
+                    "https://www.google.com/maps/search/coop/@55.8503206,-4.3411788,13z/data=!3m1!4b1?entry=ttu"
+                  )
+                }
               />
               <ContentTile
                 image={require("../../assets/asda.jpeg")}
                 title="Earn GoPoints at ASDA"
+                onPress={() =>
+                  Linking.openURL(
+                    "https://www.google.com/maps/search/asda/@55.8483428,-4.3385873,13.24z?entry=ttu"
+                  )
+                }
               />
-
+              <ContentTile
+                image={require("../../assets/lidl.jpg")}
+                title="Earn GoPoints at Lidl"
+                onPress={() =>
+                  Linking.openURL(
+                    "https://www.google.com/maps/search/Lidl/@55.848333,-4.3385873,13z/data=!3m1!4b1?entry=ttu"
+                  )
+                }
+              />
+              <ContentTile
+                image={require("../../assets/ALDI.jpg")}
+                title="Earn GoPoints at Aldi"
+                onPress={() =>
+                  Linking.openURL(
+                    "https://www.google.com/maps/search/aldi/@55.8483192,-4.3385874,13z/data=!3m1!4b1?entry=ttu"
+                  )
+                }
+              />
               <ContentTile
                 image={require("../../assets/eating-healthy.jpeg")}
                 title="Eating healthy"
+                onPress={() =>
+                  Linking.openURL(
+                    "https://www.foodstandards.gov.scot/consumers/healthy-eating/eatwell"
+                  )
+                }
               />
             </ScrollView>
           }
@@ -198,10 +236,20 @@ export default function HomeScreen(props) {
               <ContentTile
                 image={require("../../assets/recycling-center.jpg")}
                 title="Earn GoPoints recycling"
+                onPress={() =>
+                  Linking.openURL(
+                    "https://www.google.com/maps/search/recycling+center/@55.8508029,-4.3505519,13z/data=!3m1!4b1?entry=ttu"
+                  )
+                }
               />
               <ContentTile
                 image={require("../../assets/plastic-bottles.jpeg")}
                 title="Learn about recycling"
+                onPress={() =>
+                  Linking.openURL(
+                    "https://www.gov.scot/policies/managing-waste/"
+                  )
+                }
               />
             </ScrollView>
           }
