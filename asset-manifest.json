@@ -1,8 +1,7 @@
 {
   "files": {
-    "main.js": "/GreenGovan-frontend/static/js/main.b0ce0563.js",
-    "static/js/956.c3d0ca3c.js": "/GreenGovan-frontend/static/js/956.c3d0ca3c.js",
-    "static/media/ALDI.jpg": "/GreenGovan-frontend/static/media/ALDI.40d8da14631a47538c2e.jpg",
+    "main.js": "/GreenGovan-frontend/static/js/main.8644a25b.js",
+    "static/js/956.0d14553f.js": "/GreenGovan-frontend/static/js/956.0d14553f.js",
     "static/media/MaterialCommunityIcons.ttf": "/GreenGovan-frontend/static/media/MaterialCommunityIcons.5d42b4e60858731e7b65.ttf",
     "static/media/recycling-center.jpg": "/GreenGovan-frontend/static/media/recycling-center.6a4df2191903d4d0945a.jpg",
     "static/media/asda.jpeg": "/GreenGovan-frontend/static/media/asda.d5c0bf70e6ae4c46ab5c.jpeg",
@@ -26,7 +25,6 @@
     "static/media/FontAwesome5_Regular.ttf": "/GreenGovan-frontend/static/media/FontAwesome5_Regular.1017bce89c72f95bcf8e.ttf",
     "static/media/Zocial.ttf": "/GreenGovan-frontend/static/media/Zocial.07fea2ac49bcc67d9a6b.ttf",
     "static/media/logo_transparent.png": "/GreenGovan-frontend/static/media/logo_transparent.cadcc347634e8005db3a.png",
-    "static/media/lidl.jpg": "/GreenGovan-frontend/static/media/lidl.a3a1c72370a40acba214.jpg",
     "favicon.ico": "/GreenGovan-frontend/favicon.ico",
     "static/media/EvilIcons.ttf": "/GreenGovan-frontend/static/media/EvilIcons.699664b33ac2837d5bee.ttf",
     "static/media/green-transparent.png": "/GreenGovan-frontend/static/media/green-transparent.b886ab96a3bdebb17d48.png",
@@ -39,11 +37,11 @@
     "favicon-16.png": "/GreenGovan-frontend/favicon-16.png",
     "manifest.json": "/GreenGovan-frontend/manifest.json",
     "serve.json": "/GreenGovan-frontend/serve.json",
-    "main.b0ce0563.js.map": "/GreenGovan-frontend/static/js/main.b0ce0563.js.map",
-    "956.c3d0ca3c.js.map": "/GreenGovan-frontend/static/js/956.c3d0ca3c.js.map"
+    "main.8644a25b.js.map": "/GreenGovan-frontend/static/js/main.8644a25b.js.map",
+    "956.0d14553f.js.map": "/GreenGovan-frontend/static/js/956.0d14553f.js.map"
   },
   "entrypoints": [
-    "static/js/956.c3d0ca3c.js",
-    "static/js/main.b0ce0563.js"
+    "static/js/956.0d14553f.js",
+    "static/js/main.8644a25b.js"
   ]
 }
