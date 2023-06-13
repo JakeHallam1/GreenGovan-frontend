@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import React from "react";
 import { useCookies } from "react-cookie";
 import QRCode from "react-native-qrcode-svg";
@@ -12,6 +12,7 @@ import ConnectScannerModal from "../../components/Home/ConnectScannerModal";
 
 // custom modules
 import { handleLogout, handleProtectedRequest } from "../../customModules/auth";
+import GenericText from "../../components/Generic/GenericText";
 
 const colourScheme = require("../../../../brandpack/colourScheme.json");
 
@@ -58,6 +59,11 @@ export default function HomeScreen() {
         setVisible={setConnectScannerVisible}
       />
       <View style={styles.topContainer}>
+        <View style={styles.username}>
+          <GenericText size={22} weight={600}>
+            {user && user.username}
+          </GenericText>
+        </View>
         {/* Logout Button */}
         <View style={styles.button}>
           <GenericButton
@@ -67,12 +73,32 @@ export default function HomeScreen() {
             hollow={true}
             fontWeight={600}
             width={100}
+            padding={10}
             onPress={() => handleLogout(cookies, removeCookie)}
+          />
+        </View>
+        <View style={styles.logoContainer}>
+          <Image
+            source={require("../../../assets/logo_transparent.png")}
+            style={styles.logo}
           />
         </View>
       </View>
       <View style={styles.dashboard}>
         <View style={styles.buttonContainer}>
+          {/* Connect Scanner Button */}
+          <View style={styles.button}>
+            <GenericButton
+              text="Connect scanner"
+              rounded={true}
+              colour={colourScheme.primary}
+              fontWeight={600}
+              width={150}
+              padding={5}
+              onPress={() => setConnectScannerVisible(true)}
+            />
+          </View>
+          {/* Add Points Button */}
           <View style={styles.button}>
             <GenericButton
               text="Add points"
@@ -82,15 +108,6 @@ export default function HomeScreen() {
               width={130}
               padding={10}
               onPress={() => setAddPointsVisible(true)}
-            />
-            <GenericButton
-              text="Connect scanner"
-              rounded={true}
-              colour={colourScheme.primary}
-              fontWeight={600}
-              width={130}
-              padding={10}
-              onPress={() => setConnectScannerVisible(true)}
             />
           </View>
         </View>
@@ -108,15 +125,36 @@ const styles = StyleSheet.create({
   },
   topContainer: {
     width: "100%",
-    alignItems: "flex-start",
     padding: 10,
     paddingLeft: 5,
+    flexDirection: "row",
   },
-  dashboard: {},
+  dashboard: {
+    height: "100%",
+    justifyContent: "center",
+  },
   buttonContainer: {
     flexDirection: "row",
+    marginBottom: 10,
   },
   button: {
     marginHorizontal: 10,
+  },
+  logoContainer: {
+    width: 150,
+    position: "absolute",
+    right: 0,
+    marginRight: 10,
+  },
+  logo: {
+    width: "100%",
+    height: 50,
+    padding: 10,
+    resizeMode: "contain",
+  },
+  username: {
+    marginLeft: 10,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
