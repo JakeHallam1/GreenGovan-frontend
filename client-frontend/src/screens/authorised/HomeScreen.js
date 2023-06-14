@@ -60,8 +60,8 @@ export default function HomeScreen() {
       />
       <View style={styles.topContainer}>
         <View style={styles.username}>
-          <GenericText size={22} weight={600}>
-            {user && user.username}
+          <GenericText size={22} weight={700}>
+            {user && user.organisationName}
           </GenericText>
         </View>
         {/* Logout Button */}
