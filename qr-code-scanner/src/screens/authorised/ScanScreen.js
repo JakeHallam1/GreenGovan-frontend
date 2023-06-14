@@ -79,9 +79,7 @@ export default function ScanScreen(props) {
           data: customerID,
         }),
       }
-    )
-      .then(async (res) => setUser(await res.json()))
-      .catch((error) => console.log(error));
+    ).catch((error) => console.log(error));
   }
 
   if (hasPermission == false) {

@@ -54,7 +54,7 @@ export default function HomeScreen(props) {
             <View style={styles.qrCodeContainer}>
               <View style={styles.qrCode}>
                 {props.user ? (
-                  <QRCode value={props.user && props.user.userID} size={200} />
+                  <QRCode value={props.user && props.user._id} size={200} />
                 ) : (
                   <Skeleton width={200} height={200} />
                 )}
