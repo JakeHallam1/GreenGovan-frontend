@@ -58,11 +58,14 @@ export default function App() {
   const Stack = createStackNavigator();
 
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      documentTitle={{
+        formatter: (options, route) => `${route?.name ?? "Login"} - GreenGovan`,
+      }}
+    >
       {!cookies.refreshToken && <LoginScreen />}
       {cookies.refreshToken && (
         <Stack.Navigator
-          // initialRouteName="Redeem"
           screenOptions={{
             headerTitleAlign: "center",
             title: (

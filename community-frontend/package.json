@@ -66,6 +66,5 @@
     "@babel/core": "^7.20.0",
     "babel-plugin-react-native-web": "^0.18.12"
   },
-  "private": true,
-  "homepage": "https://jakehallam1.github.io/GreenGovan-frontend"
+  "private": true
 }

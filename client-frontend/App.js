@@ -22,8 +22,7 @@ export default function App() {
     <NavigationContainer
       style={styles.container}
       documentTitle={{
-        formatter: (options, route) =>
-          `${options?.title ?? route?.name ?? "Login"} - GreenGovan`,
+        formatter: (options, route) => `Dashboard - GreenGovan`,
       }}
     >
       {/* public login screen */}

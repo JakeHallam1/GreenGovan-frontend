@@ -52,7 +52,7 @@ export default function RedeemModal(props) {
                   weight="bold"
                   onPress={() => {
                     props.setVisible(false);
-                    props.onClose();
+                    props.onClose && props.onClose();
                   }}
                 />
               </View>
@@ -67,7 +67,7 @@ export default function RedeemModal(props) {
                   weight="bold"
                   onPress={() => {
                     props.onSubmit();
-                    props.setVisible(false);
+                    props.onClose && props.setVisible(false);
                   }}
                 />
               </View>

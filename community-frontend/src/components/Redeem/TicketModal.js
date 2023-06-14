@@ -1,6 +1,8 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import Modal from "react-native-modal";
+import QRCode from "react-native-qrcode-svg";
+import { Skeleton } from "@rneui/themed";
 
 import GenericText from "../Generic/GenericText";
 import GenericModal from "../Generic/GenericModal";
@@ -8,7 +10,7 @@ import GenericButton from "../Generic/GenericButton";
 
 const colourScheme = require("../../../../brandpack/colourScheme.json");
 
-export default function RedeemModal(props) {
+export default function TicketModal(props) {
   return (
     <Modal
       isVisible={Boolean(props.visible)}
@@ -20,7 +22,7 @@ export default function RedeemModal(props) {
       backdropOpacity={0.3}
       onBackdropPress={() => {
         props.setVisible(false);
-        props.onClose();
+        props.onClose && props.onClose();
       }}
       animationIn="pulse"
       animationOut="zoomOut"
@@ -37,11 +39,22 @@ export default function RedeemModal(props) {
             </GenericText>
           </View>
         }
-        body={<View style={styles.modalBody}></View>}
+        body={
+          <View style={styles.modalBody}>
+            {props.ticket ? (
+              <QRCode value={props.ticket} size={200} />
+            ) : (
+              <Skeleton width={200} height={200} />
+            )}
+            <Text style={{ margin: 10, fontSize: 16, textAlign: "center" }}>
+              Screenshot or print this QR code
+            </Text>
+          </View>
+        }
         footer={
           <View style={styles.modalFooter}>
             <View style={styles.buttonContainer}>
-              {/* "Redeem" button */}
+              {/* "Close" button */}
               <View style={styles.button}>
                 <GenericButton
                   text="Close"
@@ -51,7 +64,6 @@ export default function RedeemModal(props) {
                   width={100}
                   weight="bold"
                   onPress={() => {
-                    props.onSubmit();
                     props.setVisible(false);
                   }}
                 />

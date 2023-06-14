@@ -57,7 +57,6 @@ export default function LoginScreen(props) {
         // if all is well and login successful...
         if (response.ok) {
           const data = await response.json();
-
           // store access token to cookies
           setCookie("accessToken", data.accessToken);
           setCookie("refreshToken", data.refreshToken);

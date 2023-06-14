@@ -11,6 +11,7 @@ import { handleProtectedRequest } from "../../src/customModules/auth";
 
 // custom components
 import RedeemModal from "../../src/components/Redeem/RedeemModal";
+import TicketModal from "../../src/components/Redeem/TicketModal";
 
 const colourScheme = require("../../../brandpack/colourScheme.json");
 const ENDPOINTS = require("../../../endpoints.json");
@@ -27,8 +28,10 @@ export default function RedeemScreen(props) {
     "refreshToken",
   ]);
   const [redeemModalVisible, setRedeemModalVisible] = useState(false);
+  const [ticketModalVisible, setTicketModalVisible] = useState(false);
 
   const [selectedItem, setSelectedItem] = useState(null);
+  const [ticket, setTicket] = useState("");
 
   useEffect(() => {
     if (selectedItem) {
@@ -36,9 +39,14 @@ export default function RedeemScreen(props) {
     }
   }, [selectedItem]);
 
+  useEffect(() => {
+    if (ticket) {
+      setTicketModalVisible(true);
+    }
+  }, [ticket]);
+
   // handles redeeming points
   async function handleRedeem() {
-    console.log("Handling redeem");
     handleProtectedRequest(
       `${ENDPOINTS.backend.baseURL}:${ENDPOINTS.backend.ports.main}/api/points/redeem`,
       {
@@ -54,7 +62,8 @@ export default function RedeemScreen(props) {
       setCookie,
       removeCookie
     )
-      .then((data) => console.log(data))
+      .then(async (res) => await res.json())
+      .then((data) => setTicket(data.ticket))
       .then(() => props.loadUser())
       .catch((error) => console.log(error));
   }
@@ -91,6 +100,11 @@ export default function RedeemScreen(props) {
             </View>
           )
         }
+      />
+      <TicketModal
+        visible={ticketModalVisible}
+        setVisible={setTicketModalVisible}
+        ticket={ticket}
       />
       {/* bus ticket options */}
       <FlatGrid

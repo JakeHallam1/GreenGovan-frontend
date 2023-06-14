@@ -61,7 +61,7 @@ export default function HomeScreen(props) {
               </View>
 
               <Text style={styles.qrCodeLabel}>
-                {props.user && props.user.userID}
+                {props.user && props.user._id}
               </Text>
             </View>
           }
